@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فرم ثبت‌نام تامین‌کنندگان - فولاد آلیاژی ایران</title>
+    <style>
+        /* استایل‌های کلی برای صفحه */
+        body {
+            font-family: 'Tahoma', sans-serif;
+            direction: rtl;
+            text-align: right;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* کانتینر اصلی فرم */
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            font-size: 16px;
+            text-align: right;
+            box-sizing: border-box;
+        }
+
+        /* استایل‌های لوگو */
+        .logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            width: 100px;
+            border-radius: 50%;
+            border: 2px solid #4CAF50;
+        }
+
+        /* عنوان فرم */
+        h2 {
+            color: #333;
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        /* استایل‌های لیبل‌ها و ورودی‌ها */
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"], select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+            outline: none;
+            font-size: 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, select:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+        }
+
+        /* دکمه‌ها */
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            width: 100%;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+            box-shadow: 0px 4px 10px rgba(76, 175, 80, 0.2);
+        }
+
+        /* گروه‌های رادیویی */
+        .radio-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        /* مخفی کردن المان‌ها */
+        .hidden {
+            display: none;
+        }
+    </style>
+    <script>
+        function toggleSupplierType() {
+            const supplierOrigin = document.querySelector('input[name="supplierOrigin"]:checked').value;
+            document.getElementById('domesticOptions').classList.toggle('hidden', supplierOrigin !== 'domestic');
+            document.getElementById('foreignFields').classList.toggle('hidden', supplierOrigin !== 'foreign');
+
+            const activityType = document.getElementById('activityType');
+            activityType.innerHTML = "";
+            if (supplierOrigin === 'foreign') {
+                const options = ["سازنده", "تولیدکننده", "بازرگان"];
+                options.forEach(option => {
+                    const opt = document.createElement('option');
+                    opt.value = option.toLowerCase();
+                    opt.innerHTML = option;
+                    activityType.appendChild(opt);
+                });
+            } else {
+                const options = ["سازنده", "فروشنده", "تولیدکننده", "بازرگان", "پیمانکار"];
+                options.forEach(option => {
+                    const opt = document.createElement('option');
+                    opt.value = option.toLowerCase();
+                    opt.innerHTML = option;
+                    activityType.appendChild(opt);
+                });
+            }
+        }
+
+        function toggleLegalType() {
+            const legalType = document.querySelector('input[name="legalType"]:checked').value;
+            const nationalCodeField = document.getElementById('nationalCodeField');
+            const nationalIDField = document.getElementById('nationalIDField');
+            
+            if (legalType === 'individual') {
+                nationalCodeField.classList.remove('hidden');
+                nationalIDField.classList.add('hidden');
+                document.getElementById('nationalCode').setAttribute('maxlength', '10');
+            } else if (legalType === 'legal') {
+                nationalCodeField.classList.add('hidden');
+                nationalIDField.classList.remove('hidden');
+                document.getElementById('nationalID').setAttribute('maxlength', '11');
+            }
+        }
+
+        function showTemporaryPasswordField() {
+            document.getElementById('tempPasswordField').classList.remove('hidden');
+            document.getElementById('finalSubmitBtn').classList.remove('hidden');
+        }
+
+        function validateEmail() {
+            const email = document.getElementById('orgEmail').value;
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailPattern.test(email)) {
+                alert("لطفاً ایمیل سازمانی معتبر وارد کنید");
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+
+<div class="container">
+    <div class="logo">
+        <img src="alloy-steel-logo.png" alt="لوگوی فولاد آلیاژی ایران">
+    </div>
+    <h2>فرم ثبت‌نام تامین‌کنندگان</h2>
+
+    <label>تامین‌کننده</label>
+    <div class="radio-group">
+        <label><input type="radio" name="supplierOrigin" value="domestic" onclick="toggleSupplierType()"> داخلی</label>
+        <label><input type="radio" name="supplierOrigin" value="foreign" onclick="toggleSupplierType()"> خارجی</label>
+    </div>
+
+    <div id="domesticOptions" class="hidden">
+        <label>نوع تامین‌کننده</label>
+        <div class="radio-group">
+            <label><input type="radio" name="legalType" value="individual" onclick="toggleLegalType()"> حقیقی</label>
+            <label><input type="radio" name="legalType" value="legal" onclick="toggleLegalType()"> حقوقی</label>
+        </div>
+        
+        <div id="nationalCodeField" class="hidden">
+            <label for="nationalCode">کد ملی</label>
+            <input type="text" id="nationalCode" name="nationalCode" maxlength="10">
+        </div>
+
+        <div id="nationalIDField" class="hidden">
+            <label for="nationalID">شناسه ملی</label>
+            <input type="text" id="nationalID" name="nationalID" maxlength="11">
+        </div>
+    </div>
+
+    <div id="foreignFields" class="hidden">
+        <div id="usernameField">
+            <label for="username">نام کاربری</label>
+            <input type="text" id="username" name="username">
+        </div>
+        <label for="companyRegNumber">کد ثبت شرکت بین‌المللی</label>
+        <input type="text" id="companyRegNumber" name="companyRegNumber">
+    </div>
+
+    <label for="activityType">نوع فعالیت</label>
+    <select id="activityType" name="activityType"></select>
+
+    <label for="orgEmail">ایمیل سازمانی</label>
+    <input type="email" id="orgEmail" name="orgEmail" required>
+
+    <label for="completerPhone">شماره همراه تکمیل کننده فرم</label>
+    <input type="text" id="completerPhone" name="completerPhone">
+
+    <label for="completerName">نام و نام خانوادگی تکمیل کننده</label>
+    <input type="text" id="completerName" name="completerName">
+
+    <label for="completerPosition">سمت تکمیل کننده فرم</label>
+    <input type="text" id="completerPosition" name="completerPosition">
+
+    <div id="tempPasswordField" class="hidden">
+        <label for="tempPassword">رمز موقت ارسالی به موبایل</label>
+        <input type="text" id="tempPassword" name="tempPassword">
+    </div>
+
+    <button type="button" class="btn" onclick="if(validateEmail()) showTemporaryPasswordField()">ارسال رمز به موبایل</button>
+    <button type="submit" class="btn hidden" id="finalSubmitBtn">ورود</button>
+</div>
+
+</body>
+</html>
